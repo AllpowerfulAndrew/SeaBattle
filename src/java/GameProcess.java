@@ -1,8 +1,3 @@
-package view;
-
-import model.Field;
-import model.Player;
-
 import java.io.IOException;
 
 public class GameProcess {

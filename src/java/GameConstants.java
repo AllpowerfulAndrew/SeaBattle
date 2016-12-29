@@ -1,5 +1,3 @@
-package model;
-
 public interface GameConstants {
     int SIZE = 10;
     String[][] visibleCells = new String[SIZE][SIZE];

@@ -1,7 +1,3 @@
-package seaBattleFirstVersion;
-
-import seaBattleFirstVersion.view.GameProcess;
-
 import java.io.IOException;
 
 public class GameStart {
