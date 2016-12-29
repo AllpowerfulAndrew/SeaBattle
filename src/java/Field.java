@@ -1,21 +1,13 @@
-package battleship;
+package model;
+
+import view.GameProcess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
 
-public class Field {
-
-    final static int SIZE = 10;
-    static String[][] visibleCells = new String[SIZE][SIZE];
-    static String[][] invisibleCells = new String[SIZE][SIZE];
-    final static char[] COLUMNS = new char[]{'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'};
-    final static char[] LINES = new char[]{'⒈', '⒉', '⒊', '⒋', '⒌', '⒍', '⒎', '⒏', '⒐', '⒑'};
-    final static String CHECK = "АаБбВвГгДдЕеЖжЗзИиКк0123456789 ";
-    final static String SMALL_LETTERS = "абвгдежзик";
-    final static String BIG_LETTERS = "АБВГДЕЖЗИК";
-    final static String NUMBERS = "0123456789";
+public class Field implements GameConstants {
 
     public void init() {
 
@@ -52,7 +44,7 @@ public class Field {
         System.out.println();
     }
 
-    public static int checkShipLifes(final String n) {
+    public static int checkShipLives(final String n) {
 
         int l = 0;
 
@@ -129,7 +121,7 @@ public class Field {
     }
 
     private boolean shipSetting(final int size, final String s, int life, final int x, final int y, final int a, final int b) {
-        if (size > 0 && x < SIZE && x >= 0 && y < SIZE && y >= 0 && checkPossibilityOfShipLocating(x, y, s)) {
+        if (size > 0 && x < SIZE && x >= 0 && y < SIZE && y >= 0 && checkPossibilityOfShipLocation(x, y, s)) {
             life++;
 
             if (size == life) {
@@ -137,7 +129,7 @@ public class Field {
                 return true;
             }
 
-            if (size > 1 && x + a < SIZE && x + a >= 0 && y + b < SIZE && y + b >= 0 && checkPossibilityOfShipLocating(x + a, y + b, s)) {
+            if (size > 1 && x + a < SIZE && x + a >= 0 && y + b < SIZE && y + b >= 0 && checkPossibilityOfShipLocation(x + a, y + b, s)) {
                 life++;
 
                 if (size == life) {
@@ -146,7 +138,7 @@ public class Field {
                     return true;
                 }
 
-                if (size > 2 && x + a + a < SIZE && x + a + a >= 0 && y + b + b < SIZE && y + b + b >= 0 && checkPossibilityOfShipLocating(x + a + a, y + b + b, s)) {
+                if (size > 2 && x + a + a < SIZE && x + a + a >= 0 && y + b + b < SIZE && y + b + b >= 0 && checkPossibilityOfShipLocation(x + a + a, y + b + b, s)) {
                     life++;
 
                     if (size == life) {
@@ -156,7 +148,7 @@ public class Field {
                         return true;
                     }
 
-                    if (size > 3 && x + a + a + a < SIZE && x + a + a + a >= 0 && y + b + b + b < SIZE && y + b + b + b >= 0 && checkPossibilityOfShipLocating(x + a + a + a, y + b + b + b, s)) {
+                    if (size > 3 && x + a + a + a < SIZE && x + a + a + a >= 0 && y + b + b + b < SIZE && y + b + b + b >= 0 && checkPossibilityOfShipLocation(x + a + a + a, y + b + b + b, s)) {
                         life++;
 
                         if (size == life) {
@@ -166,7 +158,7 @@ public class Field {
                             invisibleCells[x + a + a + a][y + b + b + b] = s;
                             return true;
                         }
-                    } else if (size > 3 && x - a < SIZE && x - a >= 0 && y - b < SIZE && y - b >= 0 && checkPossibilityOfShipLocating(x - a, y - b, s)) {
+                    } else if (size > 3 && x - a < SIZE && x - a >= 0 && y - b < SIZE && y - b >= 0 && checkPossibilityOfShipLocation(x - a, y - b, s)) {
                         life++;
 
                         if (size == life) {
@@ -177,7 +169,7 @@ public class Field {
                             return true;
                         }
                     }
-                } else if (size > 2 && x - a < SIZE && x - a >= 0 && y - b < SIZE && y - b >= 0 && checkPossibilityOfShipLocating(x - a, y - b, s)) {
+                } else if (size > 2 && x - a < SIZE && x - a >= 0 && y - b < SIZE && y - b >= 0 && checkPossibilityOfShipLocation(x - a, y - b, s)) {
                     life++;
 
                     if (size == life) {
@@ -187,7 +179,7 @@ public class Field {
                         return true;
                     }
 
-                    if (size > 3 && x - a - a < SIZE && x - a - a >= 0 && y - b - b < SIZE && y - b - b >= 0 && checkPossibilityOfShipLocating(x - a - a, y - b - b, s)) {
+                    if (size > 3 && x - a - a < SIZE && x - a - a >= 0 && y - b - b < SIZE && y - b - b >= 0 && checkPossibilityOfShipLocation(x - a - a, y - b - b, s)) {
                         life++;
 
                         if (size == life) {
@@ -204,7 +196,7 @@ public class Field {
         return false;
     }
 
-    public boolean checkPossibilityOfShipLocating(final int x, final int y, final String s) {
+    public boolean checkPossibilityOfShipLocation(final int x, final int y, final String s) {
 
         if (x + 1 < SIZE && y + 1 < SIZE && x - 1 >= 0 && y - 1 >= 0) {
             if (invisibleCells[x][y].equals("|") && invisibleCells[x + 1][y + 1].equals("|") && invisibleCells[x - 1][y - 1].equals("|") &&

@@ -1,9 +1,12 @@
-package battleship;
+package view;
+
+import model.Field;
+import model.Player;
 
 import java.io.IOException;
 
 public class GameProcess {
-    static int shoots;
+    public static int shoots;
 
     public void play() throws IOException {
 

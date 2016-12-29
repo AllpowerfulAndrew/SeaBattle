@@ -1,8 +1,8 @@
-package battleship;
+package model;
 
 public class Ship {
 
-    public static Ship[] SHIPS = new Ship[]{new Ship(4, 0), new Ship(3, 1), new Ship(3, 2), new Ship(2, 3), new Ship(2, 4),
+    public final static Ship[] SHIPS = new Ship[]{new Ship(4, 0), new Ship(3, 1), new Ship(3, 2), new Ship(2, 3), new Ship(2, 4),
             new Ship(2, 5), new Ship(1, 6), new Ship(1, 7), new Ship(1, 8), new Ship(1, 9)};
     private static int shipsCount;
     private int size;
@@ -57,7 +57,7 @@ public class Ship {
         for (Ship ship : SHIPS) {
             if (n == ship.getNumber()) {
                 String s = String.valueOf(n);
-                ship.setSize(Field.checkShipLifes(s));
+                ship.setSize(Field.checkShipLives(s));
             }
         }
     }
