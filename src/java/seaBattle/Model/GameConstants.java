@@ -1,4 +1,4 @@
-package seaBattle;
+package seaBattle.Model;
 
 /**
  * Вспомогательный интерфейс.

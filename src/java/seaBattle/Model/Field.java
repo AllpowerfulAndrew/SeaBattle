@@ -1,9 +1,17 @@
-package seaBattle;
+package seaBattle.Model;
 
 /**
  * Класс игрового поля.
  */
 public class Field implements GameConstants {
+
+    /**
+     * Конструктор.
+     */
+    public Field() {
+        init();
+    }
+
 
     /**
      * Инициализирует поле.

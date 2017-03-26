@@ -1,3 +1,5 @@
+package seaBattleOld;
+
 import java.io.IOException;
 
 public class GameStart {

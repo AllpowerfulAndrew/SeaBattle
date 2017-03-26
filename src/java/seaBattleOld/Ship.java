@@ -1,3 +1,5 @@
+package seaBattleOld;
+
 public class Ship {
 
     public final static Ship[] SHIPS = new Ship[]{new Ship(4, 0), new Ship(3, 1), new Ship(3, 2), new Ship(2, 3), new Ship(2, 4),
