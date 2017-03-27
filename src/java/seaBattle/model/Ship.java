@@ -1,12 +1,24 @@
-package seaBattle.Model;
+package seaBattle.model;
 
 /**
  * Класс корабля.
  */
 public class Ship {
     private final int size;
-    private boolean isDestroyed;
+
+    /**
+     * Массив отсеков корабля.
+     */
     private Section[] sections;
+
+    /**
+     * Переменная, которая хранит в себе состояние всего корабля.
+     * По умолчанию значение false.
+     * Если все отсеки корабля изменят своё значение isDamaged на true,
+     * то это значение автоматически станет true.
+     */
+    private boolean isDestroyed;
+
 
     /**
      * Конструктор.
@@ -21,13 +33,14 @@ public class Ship {
 
 
     /**
-     * Внутренний класс отсека корабля.
+     * Класс отсека корабля.
      */
     public class Section {
         private final int positionX;
         private final int positionY;
 
         /**
+         * Переменная, которая хранит всебе состояние отсека.
          * По умолчанию отсек не повреждён (целый).
          */
         private boolean isDamaged;
@@ -100,6 +113,7 @@ public class Ship {
      * Если все уничтожены, устанавливает кораблю статус: Уничтожен.
      */
     private void checkShipStatus() {
+
         isDestroyed = true;
 
         for (Section section : sections) {

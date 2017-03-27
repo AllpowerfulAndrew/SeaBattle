@@ -1,7 +1,6 @@
-package seaBattle;
+package seaBattle.model;
 
 import org.junit.Test;
-import seaBattle.Model.Ship;
 
 import static org.junit.Assert.assertEquals;
 

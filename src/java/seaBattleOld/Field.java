@@ -241,10 +241,15 @@ public class Field implements GameConstants {
                 }
             }
         } else if (x + 1 < SIZE && y + 1 < SIZE && x - 1 >= 0 && y - 1 < 0) {
-            if (invisibleCells[x][y].equals("|") && invisibleCells[x + 1][y + 1].equals("|") && invisibleCells[x - 1][y + 1].equals("|")) {
-                if (invisibleCells[x + 1][y].equals("|") || invisibleCells[x + 1][y].equals(s)) {
-                    if (invisibleCells[x - 1][y].equals("|") || invisibleCells[x - 1][y].equals(s)) {
-                        if (invisibleCells[x][y + 1].equals("|") || invisibleCells[x][y + 1].equals(s)) {
+            if (invisibleCells[x][y].equals("|") &&
+                invisibleCells[x + 1][y + 1].equals("|") &&
+                invisibleCells[x - 1][y + 1].equals("|")) {
+                if (invisibleCells[x + 1][y].equals("|") ||
+                    invisibleCells[x + 1][y].equals(s)) {
+                    if (invisibleCells[x - 1][y].equals("|") ||
+                        invisibleCells[x - 1][y].equals(s)) {
+                        if (invisibleCells[x][y + 1].equals("|") ||
+                            invisibleCells[x][y + 1].equals(s)) {
                             return true;
                         }
                     }
