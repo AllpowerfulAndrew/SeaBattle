@@ -8,7 +8,20 @@ import java.util.Random;
  * Класс игрового поля.
  */
 public class Field implements GameConstants {
-    FieldController fieldController = new FieldController();
+    private FieldController fieldController = new FieldController();
+    private int shoots;
+
+    /**
+     * Отправляет запрос в Condole для инициализации поля.
+     */
+    public void init() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                fieldController.fieldInit(i, j);
+            }
+        }
+    }
+
 
     /**
      * Создаёт все игровые корабли.
@@ -17,16 +30,29 @@ public class Field implements GameConstants {
         for (int i = 0; i < TEN; i++) {
             if (i == 0) {
                 SHIPS[i] = setShipCoordinates(FOUR);
-                fieldController.drawShips();
+                drawShips();
             } else if (i > 0 && i < THREE) {
                 SHIPS[i] = setShipCoordinates(THREE);
-                fieldController.drawShips();
+                drawShips();
             } else if (i > TWO && i < SIX) {
                 SHIPS[i] = setShipCoordinates(TWO);
-                fieldController.drawShips();
+                drawShips();
             } else {
                 SHIPS[i] = setShipCoordinates(ONE);
-                fieldController.drawShips();
+                drawShips();
+            }
+        }
+    }
+
+    /**
+     * Отправялет координаты в Console для отрисовки кораблей.
+     */
+    private void drawShips() {
+        for (Ship ship : SHIPS) {
+            if (ship != null) {
+                for (int i = 0; i < ship.getSections().length; i++) {
+                    fieldController.drawShips(ship.getSections()[i].getPositionX(), ship.getSections()[i].getPositionY());
+                }
             }
         }
     }
@@ -38,15 +64,32 @@ public class Field implements GameConstants {
      * @param coordinateX Координата выстрела по X.
      * @param coordinateY Координата выстрела по Y.
      */
-    public void doShoot(final int coordinateX, final int coordinateY) {
+    public void doShoot(final int coordinateX, final int coordinateY, final String name) {
+        shoots++;
+
         if (fieldController.isHit(coordinateX, coordinateY)) {
             damageShip(coordinateX, coordinateY);
 
             if (isShipDestroyed(coordinateX, coordinateY)) {
-                fieldController.makeMissAroundShip(findShip(coordinateX, coordinateY));
+                makeMissAroundShip(findShip(coordinateX, coordinateY));
             }
 
             fieldController.showShipStatus(isShipDestroyed(coordinateX, coordinateY));
+        }
+    }
+
+
+    /**
+     * Отправляет запрос в Console, чтобы отметить все клетки вокруг подбитого корабля знаком "Miss".
+     *
+     * @param shipNumber Номер подбитого корабля.
+     */
+    public void makeMissAroundShip(final int shipNumber) {
+        for (Ship.Section section : SHIPS[shipNumber].getSections()) {
+            int x = section.getPositionX();
+            int y = section.getPositionY();
+
+            missMaking(x, y);
         }
     }
 
@@ -56,14 +99,14 @@ public class Field implements GameConstants {
      *
      * @return Возвращает true или false.
      */
-    public boolean isGameOver() {
+    public boolean isGameOver(final String name) {
         for (Ship ship : SHIPS) {
             if (!ship.isDestroyed()) {
                 return false;
             }
         }
 
-        fieldController.gameOver();
+        fieldController.gameOver(shoots, name);
         return true;
     }
 
@@ -206,6 +249,7 @@ public class Field implements GameConstants {
 
     /**
      * Определяет корабль по координатам отсека.
+     *
      * @param coordinateX Координата отсека по X.
      * @param coordinateY Координата отсека по Y.
      * @return Возвращает номер корабля в массиве кораблей.
@@ -223,5 +267,91 @@ public class Field implements GameConstants {
 
         // -1 написан просто так. Хотя до этого по логике не должно дойти никогда.
         return -1;
+    }
+
+
+    /**
+     * Вызывается другим методом для отметки соседнихячеек подбитого корабля знаком "Мимо".
+     *
+     * @param x Координата по X.
+     * @param y Координата по Y.
+     */
+    private void missMaking(int x, int y) {
+        // TODO Подумать над тем, как можно оптимизировать и сократить этот метод.
+
+        if (x == SIZE - 1 && y == 0) {
+            for (int i = x; i > x - 2; i--) {
+                for (int j = y; j < y + 2; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (x == SIZE - 1 && y == SIZE - 1) {
+            for (int i = x; i > x - 2; i--) {
+                for (int j = y; j > y - 2; j--) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (x == 0 && y == SIZE - 1) {
+            for (int i = x; i < x + 2; i++) {
+                for (int j = y; j > y - 2; j--) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (x == 0 && y == 0) {
+            for (int i = x; i < x + 2; i++) {
+                for (int j = y; j < y + 2; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (x == 0) {
+            for (int i = x; i < x + 1; i++) {
+                for (int j = y - 1; j < y + 2; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (y == 0) {
+            for (int i = x - 1; i < x + 2; i++) {
+                for (int j = y; j < y + 2; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (x == SIZE - 1) {
+            for (int i = x; i > x - 2; i--) {
+                for (int j = y - 1; j < y + 2; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else if (y == SIZE - 1) {
+            for (int i = x - 1; i < x + 2; i++) {
+                for (int j = y - 1; j < y + 1; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        } else {
+            for (int i = x - 1; i < x + 2; i++) {
+                for (int j = y - 1; j < y + 2; j++) {
+                    if (i == x && j == y) continue;
+                    fieldController.makeMiss(i, j);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Возвращает сумму сделанных выстрелов пользователем.
+     *
+     * @return Выстрелы пользователя.
+     */
+    private int getShoots() {
+        return shoots;
     }
 }

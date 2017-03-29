@@ -20,13 +20,14 @@ public class GameSession implements GameConstants {
      * Игровой процесс.
      */
     public void gameStart() {
-        gameController.fieldInit();
+        setPlayer();
+        field.init();
         field.createShips();
-        gameController.showInvisibleField();
+        gameController.showVisibleField();
 
         do {
             doShoot();
-        } while (!field.isGameOver());
+        } while (!field.isGameOver(player.getName()));
     }
 
 
@@ -34,10 +35,10 @@ public class GameSession implements GameConstants {
      * Делаем выстрел.
      */
     private void doShoot() {
-        int x = gameController.askShootCoordinateX() - 1;
-        int y = gameController.askShootCoordinateY() - 1;
+        int x = gameController.askShootCoordinateX(player.getName()) - 1;
+        int y = gameController.askShootCoordinateY(player.getName()) - 1;
 
-        field.doShoot(x, y);
+        field.doShoot(x, y, player.getName());
     }
 
 

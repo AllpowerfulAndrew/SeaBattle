@@ -9,14 +9,6 @@ public class GameController {
     Console console = new Console();
 
     /**
-     * Инициализирует игровое поле.
-     */
-    public void fieldInit() {
-        console.fieldInit();
-    }
-
-
-    /**
      * Отображает в консоли игровое поле.
      */
     public void showVisibleField() {
@@ -36,9 +28,9 @@ public class GameController {
      * Пересылает запрос консоли, чтобы узнать у игрока координату выстрела.
      * @return Возвращает координату X.
      */
-    public int askShootCoordinateX() {
+    public int askShootCoordinateX(final String name) {
         String coordinateX = "X";
-        return console.askShootCoordinate(coordinateX);
+        return console.askShootCoordinate(coordinateX, name);
     }
 
 
@@ -46,8 +38,8 @@ public class GameController {
      * Пересылает запрос консоли, чтобы узнать у игрока координату выстрела.
      * @return Возвращает координату Y.
      */
-    public int askShootCoordinateY() {
+    public int askShootCoordinateY(final String name) {
         String coordinateY = "Y";
-        return console.askShootCoordinate(coordinateY);
+        return console.askShootCoordinate(coordinateY, name);
     }
 }

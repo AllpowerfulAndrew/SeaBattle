@@ -20,10 +20,19 @@ public class FieldController {
 
 
     /**
+     * Запрос в Condole для инициализации поля.
+     * @param x Координата по X.
+     * @param y Коордната по Y.
+     */
+    public void fieldInit(final int x, final int y) {
+        console.fieldInit(x, y);
+    }
+
+    /**
      * Запрос в Console для прорисовки кораблей на поле и их отображение.
      */
-    public void drawShips() {
-        console.drawShips();
+    public void drawShips(final int x, final int y) {
+        console.drawShips(x, y);
     }
 
 
@@ -48,18 +57,19 @@ public class FieldController {
 
 
     /**
-     * Отмечет все соседние ячейки потопленного корабля, знаком "Мимо".
-     * @param shipNumber Номер подбитого корабля.
+     * Отмечет все пустые соседние ячейки отсека знаком "Мимо".
+     * @param x Координата ячейки по X.
+     * @param y Координата ячейки по Y.
      */
-    public void makeMissAroundShip(final int shipNumber) {
-        console.makeMissAroundShip(shipNumber);
+    public void makeMiss(final int x, final int y) {
+        console.makeMiss(x, y);
     }
 
 
     /**
      * Выводит на экран сообщение об окончании игры.
      */
-    public void gameOver() {
-        console.gameOver();
+    public void gameOver(final int shoots, final String name) {
+        console.gameOver(shoots, name);
     }
 }

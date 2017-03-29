@@ -16,7 +16,7 @@ public class Player {
 
     /**
      * Конструктор.
-     * При инициализации отправляет запрос в Condole, чтобы узнать имя игрока.
+     * При инициализации отправляет запрос в Console, чтобы узнать имя игрока.
      */
     public Player() {
         this.name = controller.askPlayerName();

@@ -1,7 +1,6 @@
 package seaBattle.view;
 
 import seaBattle.model.GameConstants;
-import seaBattle.model.Ship;
 import seaBattle.model.userExceptions.IncorrectInput;
 
 import java.io.BufferedReader;
@@ -15,14 +14,12 @@ public class Console implements GameConstants {
 
     /**
      * Инициализирует поле.
+     * @param x Координата по X.
+     * @param y Коордната по Y.
      */
-    public void fieldInit() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                VISIBLE_CELLS[i][j] = "|";
-                INVISIBLE_CELLS[i][j] = "|";
-            }
-        }
+    public void fieldInit(final int x, final int y) {
+        VISIBLE_CELLS[x][y] = "|";
+        INVISIBLE_CELLS[x][y] = "|";
     }
 
 
@@ -30,7 +27,7 @@ public class Console implements GameConstants {
      * Отображает видимое игровое поле.
      */
     public void showVisibleField() {
-        System.out.println("=========================");
+        System.out.println("==============================");
         show(VISIBLE_CELLS);
     }
 
@@ -39,7 +36,7 @@ public class Console implements GameConstants {
      * Отображает невидимое игровое поле.
      */
     public void showInvisibleField() {
-        System.out.println("=========================");
+        System.out.println("==============================");
         show(INVISIBLE_CELLS);
     }
 
@@ -192,14 +189,8 @@ public class Console implements GameConstants {
     /**
      * Отрисовывает корабли в невидимое для игрока поле.
      */
-    public void drawShips() {
-        for (Ship ship : SHIPS) {
-            if (ship != null) {
-                for (int i = 0; i < ship.getSections().length; i++) {
-                    INVISIBLE_CELLS[ship.getSections()[i].getPositionX()][ship.getSections()[i].getPositionY()] = "S";
-                }
-            }
-        }
+    public void drawShips(final int x, final int y) {
+        INVISIBLE_CELLS[x][y] = "S";
     }
 
 
@@ -211,7 +202,7 @@ public class Console implements GameConstants {
      * @param y Координата выстрела по Y.
      */
     public boolean doShoot(final int x, final int y) {
-        System.out.println("=========================");
+        System.out.println("==============================");
 
         if (INVISIBLE_CELLS[x][y].equals("S")) {
             VISIBLE_CELLS[x][y] = "X";
@@ -222,6 +213,11 @@ public class Console implements GameConstants {
         } else if (INVISIBLE_CELLS[x][y].equals("|")) {
             INVISIBLE_CELLS[x][y] = "*";
             VISIBLE_CELLS[x][y] = "*";
+            System.out.println("Miss!");
+            showVisibleField();
+
+            return false;
+        } else if (INVISIBLE_CELLS[x][y].equals("*") || INVISIBLE_CELLS[x][y].equals("X")) {
             System.out.println("Miss!");
             showVisibleField();
 
@@ -251,88 +247,31 @@ public class Console implements GameConstants {
 
 
     /**
-     * Отмечет все соседние ячейки потопленного корабля, знаком "Мимо".
-     *
-     * @param shipNumber Номер подбитого корабля.
+     * Выводит в консоль сообщение об окончании игры и статистику.
      */
-    public void makeMissAroundShip(final int shipNumber) {
-        // TODO Подумать над тем, как можно оптимизировать и сократить этот метод.
+    public void gameOver(final int shoots, final String name) {
+        System.out.println("==============================");
+        System.out.println("CONGRATULATIONS, "+ name +"! YOU WIN!");
+        System.out.println("==============================");
+        System.out.println();
+        System.out.println("STATISTIC:");
+        System.out.println("Shoots: " + shoots);
+        System.out.println();
+        System.out.println("RESULT:");
 
-        for (Ship.Section section : SHIPS[shipNumber].getSections()) {
-            int x = section.getPositionX();
-            int y = section.getPositionY();
-
-            if (x < SIZE && y < SIZE && x > 0 && x > 0) {
-                if (INVISIBLE_CELLS[x + 1][y].equals("X")) VISIBLE_CELLS[x + 1][y] = "*";
-                if (INVISIBLE_CELLS[x - 1][y].equals("X")) VISIBLE_CELLS[x - 1][y] = "*";
-                if (INVISIBLE_CELLS[x][y + 1].equals("X")) VISIBLE_CELLS[x][y + 1] = "*";
-                if (INVISIBLE_CELLS[x][y - 1].equals("X")) VISIBLE_CELLS[x][y - 1] = "*";
-                if (INVISIBLE_CELLS[x + 1][y + 1].equals("X")) VISIBLE_CELLS[x + 1][y + 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y + 1].equals("X")) VISIBLE_CELLS[x - 1][y + 1] = "*";
-                if (INVISIBLE_CELLS[x + 1][y - 1].equals("X")) VISIBLE_CELLS[x + 1][y - 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y - 1].equals("X")) VISIBLE_CELLS[x - 1][y - 1] = "*";
-
-            } else if (x < SIZE && y == 0 && x > 0) {
-                if (INVISIBLE_CELLS[x + 1][y].equals("X")) VISIBLE_CELLS[x + 1][y] = "*";
-                if (INVISIBLE_CELLS[x - 1][y].equals("X")) VISIBLE_CELLS[x - 1][y] = "*";
-                if (INVISIBLE_CELLS[x][y + 1].equals("X")) VISIBLE_CELLS[x][y + 1] = "*";
-                if (INVISIBLE_CELLS[x + 1][y + 1].equals("X")) VISIBLE_CELLS[x + 1][y + 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y + 1].equals("X")) VISIBLE_CELLS[x - 1][y + 1] = "*";
-
-            } else if (x == SIZE - 1 && y < SIZE && y > 0) {
-                if (INVISIBLE_CELLS[x - 1][y].equals("X")) VISIBLE_CELLS[x - 1][y] = "*";
-                if (INVISIBLE_CELLS[x][y + 1].equals("X")) VISIBLE_CELLS[x][y + 1] = "*";
-                if (INVISIBLE_CELLS[x][y - 1].equals("X")) VISIBLE_CELLS[x][y - 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y + 1].equals("X")) VISIBLE_CELLS[x - 1][y + 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y - 1].equals("X")) VISIBLE_CELLS[x - 1][y - 1] = "*";
-
-            } else if (x < SIZE && y == SIZE - 1 && x > 0) {
-                if (INVISIBLE_CELLS[x + 1][y].equals("X")) VISIBLE_CELLS[x + 1][y] = "*";
-                if (INVISIBLE_CELLS[x - 1][y].equals("X")) VISIBLE_CELLS[x - 1][y] = "*";
-                if (INVISIBLE_CELLS[x][y - 1].equals("X")) VISIBLE_CELLS[x][y - 1] = "*";
-                if (INVISIBLE_CELLS[x + 1][y - 1].equals("X")) VISIBLE_CELLS[x + 1][y - 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y - 1].equals("X")) VISIBLE_CELLS[x - 1][y - 1] = "*";
-
-            } else if (x == 0 && y < SIZE && y > 0) {
-                if (INVISIBLE_CELLS[x + 1][y].equals("X")) VISIBLE_CELLS[x + 1][y] = "*";
-                if (INVISIBLE_CELLS[x][y + 1].equals("X")) VISIBLE_CELLS[x][y + 1] = "*";
-                if (INVISIBLE_CELLS[x][y - 1].equals("X")) VISIBLE_CELLS[x][y - 1] = "*";
-                if (INVISIBLE_CELLS[x + 1][y + 1].equals("X")) VISIBLE_CELLS[x + 1][y + 1] = "*";
-                if (INVISIBLE_CELLS[x + 1][y - 1].equals("X")) VISIBLE_CELLS[x + 1][y - 1] = "*";
-
-            } else if (x == SIZE - 1 && y == 0) {
-                if (INVISIBLE_CELLS[x - 1][y].equals("X")) VISIBLE_CELLS[x - 1][y] = "*";
-                if (INVISIBLE_CELLS[x][y + 1].equals("X")) VISIBLE_CELLS[x][y + 1] = "*";
-                if (INVISIBLE_CELLS[x - 1][y + 1].equals("X")) VISIBLE_CELLS[x - 1][y + 1] = "*";
-
-            } else if (x == SIZE - 1 && y == SIZE - 1) {
-                if (INVISIBLE_CELLS[x - 1][y].equals("X")) VISIBLE_CELLS[x][y] = "*";
-                if (INVISIBLE_CELLS[x - 1][y - 1].equals("X")) VISIBLE_CELLS[x][y] = "*";
-                if (INVISIBLE_CELLS[x][y - 1].equals("X")) VISIBLE_CELLS[x][y] = "*";
-
-            } else if (x == 0 && y == SIZE - 1) {
-                if (INVISIBLE_CELLS[x + 1][y].equals("X")) VISIBLE_CELLS[x][y] = "*";
-                if (INVISIBLE_CELLS[x + 1][y - 1].equals("X")) VISIBLE_CELLS[x][y] = "*";
-                if (INVISIBLE_CELLS[x][y - 1].equals("X")) VISIBLE_CELLS[x][y] = "*";
-
-            } else if (x == 0 && y == 0) {
-                if (INVISIBLE_CELLS[x + 1][y].equals("X")) VISIBLE_CELLS[x][y] = "*";
-                if (INVISIBLE_CELLS[x + 1][y + 1].equals("X")) VISIBLE_CELLS[x][y] = "*";
-                if (INVISIBLE_CELLS[x][y + 1].equals("X")) VISIBLE_CELLS[x][y] = "*";
-            }
+        if (shoots < 21) {
+            System.out.println("Excellent!");
+        } else if (shoots < 31) {
+            System.out.println("Good!");
+        } else if (shoots < 41) {
+            System.out.println("Normal.");
+        } else if (shoots < 51) {
+            System.out.println("Bad!");
+        } else if (shoots > 50) {
+            System.out.println("Awful!");
         }
-
-        showVisibleField();
-    }
-
-
-    /**
-     * Выводит на экран сообщение об окончании игры.
-     */
-    public void gameOver() {
-        System.out.println("=========================");
-        System.out.println("CONGRATULATIONS! YOU WIN!");
-        System.out.println("=========================");
+        System.out.println();
+        System.out.println("==============================");
     }
 
 
@@ -350,6 +289,8 @@ public class Console implements GameConstants {
                 return reader.readLine();
             } catch (IOException e) {
                 System.err.println("Incorrect value. Enter again:");
+            } finally {
+                System.out.println("==============================");
             }
         }
     }
@@ -361,21 +302,24 @@ public class Console implements GameConstants {
      * @param coordinate Строчное значение. Должно значить либо X либо Y.
      * @return Возвращает координату по X или Y.
      */
-    public int askShootCoordinate(String coordinate) {
-        System.out.println("=========================");
+    public int askShootCoordinate(final String coordinate, final String name) {
+        if (coordinate.equals("X")) {
+            System.out.println("==============================");
+        }
+
         System.out.println("Enter shoot coordinate " + coordinate + ":");
 
         while (true) {
             try {
                 if (coordinate.equals("X")) {
-                    return getInputX();
+                    return getInputX(name);
                 } else if (coordinate.equals("Y")) {
-                    return getInputY();
+                    return getInputY(name);
                 }
             } catch (IncorrectInput e) {
                 System.err.println(e.getMessage());
             } catch (IOException e) {
-                System.err.println("Incorrect value. Enter correct " + coordinate + " coordinate:");
+                System.err.println("Incorrect value, "+ name + ". Enter correct " + coordinate + " coordinate:");
             }
         }
     }
@@ -387,7 +331,7 @@ public class Console implements GameConstants {
      * @throws IOException    Системное исклчючение.
      * @throws IncorrectInput Исключение возникает, если введы не правильные данные.
      */
-    private int getInputX() throws IOException, IncorrectInput {
+    private int getInputX(final String name) throws IOException, IncorrectInput {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         while (true) {
@@ -395,12 +339,12 @@ public class Console implements GameConstants {
                 int x = Integer.parseInt(reader.readLine());
 
                 if (x > 10 || x < 1) {
-                    throw new IncorrectInput("Incorrect value. Please enter number from 1 to 10:");
+                    throw new IncorrectInput("Incorrect value, "+ name +". Please enter number from 1 to 10:");
                 }
 
                 return x;
             } catch (NumberFormatException e) {
-                System.err.println("Incorrect value. Please enter number from 1 to 10:");
+                System.err.println("Incorrect value, "+ name +". Please enter number from 1 to 10:");
             }
         }
     }
@@ -413,7 +357,7 @@ public class Console implements GameConstants {
      * @throws IOException    Системное исклчючение.
      * @throws IncorrectInput Исключение возникает, если введы не правильные данные.
      */
-    private int getInputY() throws IOException, IncorrectInput {
+    private int getInputY(final String name) throws IOException, IncorrectInput {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         while (true) {
@@ -425,8 +369,18 @@ public class Console implements GameConstants {
                 }
             }
 
-            throw new IncorrectInput("Incorrect value. Please enter letter from A(a) to J(j):");
+            throw new IncorrectInput("Incorrect value, "+ name +". Please enter letter from A(a) to J(j):");
         }
+    }
+
+    /**
+     * Отмечет все пустые соседние ячейки отсека знаком "Мимо".
+     *
+     * @param x Координата ячейки по X.
+     * @param y Координата ячейки по Y.
+     */
+    public void makeMiss(final int x, final int y) {
+        if (!INVISIBLE_CELLS[x][y].equals("X")) VISIBLE_CELLS[x][y] = "*";
     }
 
 
